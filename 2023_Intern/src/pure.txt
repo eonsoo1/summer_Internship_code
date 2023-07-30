@@ -1,0 +1,102 @@
+#include <iostream>
+#include <vector>
+#include <cmath>
+
+// Waypoint 구조체
+struct Waypoint {
+    double x;
+    double y;
+};
+
+// 로봇의 현재 위치
+struct RobotPose {
+    double x;
+    double y;
+    double theta; // 로봇의 방향 (radian)
+};
+
+// Pure Pursuit 알고리즘 클래스
+class PurePursuit {
+public:
+    PurePursuit(double look_ahead_distance) : look_ahead_distance_(look_ahead_distance) {}
+
+    void setWaypoints(const std::vector<Waypoint>& waypoints) {
+        waypoints_ = waypoints;
+    }
+
+    Waypoint calculateTargetPoint(const RobotPose& robot_pose) {
+        Waypoint target_point;
+
+        // 현재 위치와 가장 가까운 경로 상의 점을 찾기
+        int closest_idx = findClosestWaypointIndex(robot_pose);
+
+        // 목표 지점을 계산
+        double target_distance = look_ahead_distance_;
+        while (closest_idx + 1 < waypoints_.size()) {
+            double dx = waypoints_[closest_idx + 1].x - waypoints_[closest_idx].x;
+            double dy = waypoints_[closest_idx + 1].y - waypoints_[closest_idx].y;
+            double segment_length = std::sqrt(dx * dx + dy * dy);
+
+            if (target_distance < segment_length) {
+                target_point.x = waypoints_[closest_idx].x + (target_distance / segment_length) * dx;
+                target_point.y = waypoints_[closest_idx].y + (target_distance / segment_length) * dy;
+                break;
+            } else {
+                target_distance -= segment_length;
+                closest_idx++;
+            }
+        }
+
+        return target_point;
+    }
+
+private:
+    int findClosestWaypointIndex(const RobotPose& robot_pose) {
+        int closest_idx = 0;
+        double closest_distance = std::numeric_limits<double>::max();
+
+        for (int i = 0; i < waypoints_.size(); ++i) {
+            double dx = waypoints_[i].x - robot_pose.x;
+            double dy = waypoints_[i].y - robot_pose.y;
+            double distance = std::sqrt(dx * dx + dy * dy);
+
+            if (distance < closest_distance) {
+                closest_distance = distance;
+                closest_idx = i;
+            }
+        }
+
+        return closest_idx;
+    }
+
+    std::vector<Waypoint> waypoints_;
+    double look_ahead_distance_;
+};
+
+int main() {
+    // 경로를 구성하는 Waypoint들
+    std::vector<Waypoint> waypoints = {
+        {0.0, 0.0},
+        {1.0, 1.0},
+        {2.0, 2.0},
+        {3.0, 1.0},
+        {4.0, 0.0}
+    };
+
+    // Pure Pursuit 알고리즘 객체 생성
+    PurePursuit pure_pursuit(0.5); // Look-ahead 거리 설정 (0.5)
+
+    // Pure Pursuit 알고리즘에 경로 설정
+    pure_pursuit.setWaypoints(waypoints);
+
+    // 로봇의 현재 위치
+    RobotPose robot_pose = {0.2, 0.3, 0.0}; // x=0.2, y=0.3 위치에서 로봇이 바라보는 방향은 0 radian
+
+    // 목표 지점 계산
+    Waypoint target_point = pure_pursuit.calculateTargetPoint(robot_pose);
+
+    // 결과 출력
+    std::cout << "Target Point: x = " << target_point.x << ", y = " << target_point.y << std::endl;
+
+    return 0;
+}
