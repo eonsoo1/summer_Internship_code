@@ -11,6 +11,30 @@ Spline::~Spline(){}
 //not-a-knot
 //h[1]*segments[0].b-(h[0]+h[1])*segments[1].b +h[0]*segments[2].b = 0
 
+void Spline::addDataPoint() {
+   
+    SplineSegment segment;
+    for(int i = 0; i < n+1 ; i++){
+        segment.x = x[i];
+        segment.d = y[i];
+        segments.push_back(segment);
+        std::cout << "x : " <<segments[i].x <<"  y : "<< segments[i].d << std::endl;
+    }
+    std::cout << "----------------------" << std::endl;
+    for (int i = 0; i < n; i++) {
+        //h_i = x_i+1 - x_i
+        //eta_i = y_i+1 - y_i (g(x_i) = y_i = d_i)
+        
+        h.push_back(segments[i + 1].x - segments[i].x);
+        std::cout << "h : " << h[i] ;
+        eta.push_back(segments[i + 1].d - segments[i].d);
+        temp2.push_back(eta[i]);
+        std::cout << "  eta : " << eta[i] << std::endl;
+    }
+    b_matrix.push_back(temp2);
+    std::cout << "----------------------" << std::endl;
+}
+
 void Spline::matrixCalculator(){
     temp1.push_back(h[0]);
     temp1.push_back(-(h[0]+h[1]));
@@ -58,32 +82,9 @@ void Spline::matrixCalculator(){
     }
     A_matrix.push_back(temp1);
     temp1.clear();
-    
 }
 
-void Spline::addDataPoint() {
-   
-    SplineSegment segment;
-    for(int i = 0; i < n+1 ; i++){
-        segment.x = x[i];
-        segment.d = y[i];
-        segments.push_back(segment);
-        std::cout << "x : " <<segments[i].x <<"  y : "<< segments[i].d << std::endl;
-    }
-    std::cout << "----------------------" << std::endl;
-    for (int i = 0; i < n; i++) {
-        //h_i = x_i+1 - x_i
-        //eta_i = y_i+1 - y_i (g(x_i) = y_i = d_i)
-        
-        h.push_back(segments[i + 1].x - segments[i].x);
-        std::cout << "h : " << h[i] ;
-        eta.push_back(segments[i + 1].d - segments[i].d);
-        temp2.push_back(eta[i]);
-        std::cout << "  eta : " << eta[i] << std::endl;
-    }
-    b_matrix.push_back(temp2);
-    std::cout << "----------------------" << std::endl;
-}
+
 
 void Spline::computeSplineCoeffficients(){
 
