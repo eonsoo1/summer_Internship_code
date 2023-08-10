@@ -9,7 +9,9 @@
                 "/opt/ros/noetic/include/**",
                 "/home/eonsoo/carla-ros-bridge/catkin_ws/devel/include",
                 "/home/eonsoo/catkin_ws/devel/include",
-                "/usr/include/**"
+                "/usr/include/**",
+                "/home/eonsoo/libosmium/include",
+                "/usr/local/include/gsl"
             ],
             "name": "ROS",
             "intelliSenseMode": "gcc-x64",
