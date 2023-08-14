@@ -11,7 +11,9 @@
                 "/home/eonsoo/catkin_ws/devel/include",
                 "/usr/include/**",
                 "/home/eonsoo/libosmium/include",
-                "/usr/local/include/gsl"
+                "/usr/local/include/gsl",
+                "/opt/ros/noetic/include",
+                "${workspaceFolder}"
             ],
             "name": "ROS",
             "intelliSenseMode": "gcc-x64",

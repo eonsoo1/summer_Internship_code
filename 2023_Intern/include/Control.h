@@ -20,7 +20,11 @@ class Pure{
 private:    
   ros::NodeHandle n;
   ros::Subscriber MyInfo_sub;
-  ros::Subscriber waypoint_sub;
+  ros::Subscriber waypoint_first_sub;
+  ros::Subscriber waypoint_second_sub;
+  ros::Subscriber waypoint_third_sub;
+  ros::Subscriber waypoint_forth_sub;
+
   ros::Subscriber speed_sub;
   ros::Publisher vis_pub;
   ros::Publisher controller_pub;
@@ -35,6 +39,9 @@ private:
   double vehicle_x;
   double vehicle_y;
   double vehicle_z;
+  double rel_x;
+  double rel_y;
+  double rel_z;
   double vehicle_speed;
   double orientation_x;
   double orientation_y;
@@ -63,11 +70,13 @@ public :
   void VehicleCurrentPoint();
   void NextWaypoint();
   void GetRPY(); // Quaternion 값을 roll, pitch, yaw 로 변환 해주는 함수
+  void TransformPoint();
   void AlphaCalculator(); // 내 차와 상대방 차의 사이 alpha 구하기
   double PureCalculator(); //pure pursuit 계산 하는 공식이 사용될 함수
   double ControlPid();
   double CalculateCTE();
   void PublishCommend(carla_msgs::CarlaEgoVehicleControl& msg);
+  void printresult();
   void Do();
   
 };

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(statelattice)
+project(lattice)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -10,18 +10,16 @@ project(statelattice)
 find_package(catkin REQUIRED COMPONENTS
   carla_msgs
   geometry_msgs
-  #message_generation
+  message_generation
   nav_msgs
   roscpp
   std_msgs
   tf
-  
-
 )
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
-find_package(Armadillo REQUIRED)
+
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
@@ -109,10 +107,10 @@ find_package(Armadillo REQUIRED)
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-  INCLUDE_DIRS include
-  LIBRARIES statelattice
-  CATKIN_DEPENDS carla_msgs geometry_msgs nav_msgs roscpp std_msgs tf
-  DEPENDS system_lib
+#  INCLUDE_DIRS include
+#  LIBRARIES lattice
+#  CATKIN_DEPENDS carla_msgs geometry_msgs message_generation nav_msgs roscpp std_msgs tf
+#  DEPENDS system_lib
 )
 
 ###########
@@ -122,14 +120,13 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-  include
+# include
   ${catkin_INCLUDE_DIRS}
-  ${ARMADILLO_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/statelattice.cpp
+#   src/${PROJECT_NAME}/lattice.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -140,7 +137,7 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/statelattice_node.cpp)
+# add_executable(${PROJECT_NAME}_node src/lattice_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -156,22 +153,6 @@ include_directories(
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
-
-add_executable(pseudo_inverse_1
-    src/baseframe.cpp
-    #nclude/waypoint_save/get_lat_lon.cpp
-    #include/curve_display/display.cpp
-)
-add_dependencies(pseudo_inverse_1 ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-
-
-target_link_libraries(pseudo_inverse_1
-    ${catkin_LIBRARIES}
-    ${ARMADILLO_LIBRARIES}
-)
-
-
-
 
 #############
 ## Install ##
@@ -220,7 +201,7 @@ target_link_libraries(pseudo_inverse_1
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_statelattice.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_lattice.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()

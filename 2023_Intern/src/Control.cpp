@@ -5,7 +5,8 @@
 Pure::Pure(){
   speed_sub = n.subscribe("/carla/ego_vehicle/speedometer", 100, &Pure::SpeedCallback, this);
   MyInfo_sub = n.subscribe("/carla/ego_vehicle/odometry", 100, &Pure::EgoVehicleCallback, this);
-  waypoint_sub = n.subscribe("point_msgs", 100, &Pure::PointCallback, this);
+  waypoint_first_sub = n.subscribe("first_point_msgs", 100, &Pure::PointCallback, this);
+  waypoint_second_sub = n.subscribe("second_point_msgs", 100, &Pure::PointCallback, this);
   controller_pub = n.advertise<carla_msgs::CarlaEgoVehicleControl>("/carla/ego_vehicle/vehicle_control_cmd", 100);
   vis_pub = n.advertise<visualization_msgs::Marker>( "waypoint", 1000 );
   vehicle_vis_pub = n.advertise<visualization_msgs::Marker>( "vehicle_waypoint", 1);
@@ -191,6 +192,13 @@ void Pure::GetRPY(){
   m.getRPY(roll, pitch, yaw);
 
 }
+void Pure::TransformPoint(){
+
+  rel_x = look_ahead_distance * cos(alpha);
+  rel_y = look_ahead_distance * sin(alpha);
+  std::cout << " relative_target_x = " << rel_x<< std::endl;
+  std::cout << " relative_target_y = " << rel_y << std::endl;
+}
 
 /****************차와 target point 사이의 각도 구하는 함수*****************/
 
@@ -198,14 +206,15 @@ void Pure::AlphaCalculator(){
 
   GetRPY();
 
-  std::cout << " Vehicle_yaw = " << yaw << std::endl;
-  std::cout << " Current_Target_x = " << current_target_x << std::endl;
-  std::cout << " Current_Target_y = " << current_target_y << std::endl;
-  std::cout << " Current_Vehicle_x = " << vehicle_x << std::endl;
-  std::cout << " Current_Vehicle_y = " << vehicle_y << std::endl; 
+  std::cout << " vehicle_yaw = " << yaw << std::endl;
+  std::cout << " world_target_x = " << current_target_x << std::endl;
+  std::cout << " world_target_y = " << current_target_y << std::endl;
+  std::cout << " world_vehicle_x = " << vehicle_x << std::endl;
+  std::cout << " world_vehicle_y = " << vehicle_y << std::endl; 
+
   alpha = atan2((current_target_y - vehicle_y), (current_target_x - vehicle_x)) - yaw;
   look_ahead_distance = sqrt(pow((current_target_x-vehicle_x), 2) + pow((current_target_y-vehicle_y), 2));
-
+  TransformPoint();
   std::cout<< " Look_Ahead_Distance = " << look_ahead_distance << std::endl;
   std::cout << "" << std::endl;  
 }
