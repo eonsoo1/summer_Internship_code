@@ -62,22 +62,22 @@ int main(int argc, char** argv) {
         throttle_pid = longitudinal_pid.calculate(TARGET_VEL_MS, msgs.vehicle_status.velocity);
 
         steer_output = pp_ctr.SetSteer(
-            waypointsfirst[target_wypt_idx][POSITION_X],
-            waypointsfirst[target_wypt_idx][POSITION_Y]
+            waypointsthird[target_wypt_idx][POSITION_X],
+            waypointsthird[target_wypt_idx][POSITION_Y]
         );
 
 
         std::cout << 
             "target waypoint index : " << target_wypt_idx << "\n" <<
-            "waypoint x : " << waypointsfirst[target_wypt_idx][POSITION_X] << "\n" <<
-            "waypoint y : " << waypointsfirst[target_wypt_idx][POSITION_Y] << "\n" <<
+            "waypoint x : " << waypointsthird[target_wypt_idx][POSITION_X] << "\n" <<
+            "waypoint y : " << waypointsthird[target_wypt_idx][POSITION_Y] << "\n" <<
             "steer : " << steer_output << "\n" << 
             "==================================================\n" <<
         std::endl;
 
         msgs.PubMsg(throttle_pid, steer_output, 0.);
 
-        if (target_wypt_idx == waypointsfirst.size()-1) {
+        if (target_wypt_idx == waypointsthird.size()-1) {
             return 0;
         }
 
