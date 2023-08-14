@@ -34,6 +34,10 @@
 
 void GetWaypoints(std::vector<std::vector<double>>& container);
 
+void GetWaypointsTwo(std::vector<std::vector<double>>& container, std::string location);
+
+void ProjectorCoords(std::vector<std::vector<double>>& waypoints);
+
 // return data's vector length
 int CSV2Data(std::string csv_location, std::string  reading_col_start_title, std::string reading_col_end_title, std::vector<std::vector<double>> &data_vec);
 

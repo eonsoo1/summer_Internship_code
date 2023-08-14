@@ -18,8 +18,6 @@
 #define I_GAIN          0.
 #define D_GAIN          1.
 
-#define REF_LATITUDE    0.
-#define REF_LONGITUDE   0.
 #define TARGET_VEL_MS   10.
 
 
@@ -31,29 +29,22 @@ int main(int argc, char** argv) {
 
     // bagfile car odometry -> waypoints
     std::vector<std::vector<double>> waypointsfirst;
-    GetWaypoints(waypointsfirst);
     std::vector<std::vector<double>> waypointssecond;
-    GetWaypoints(waypointssecond);
     std::vector<std::vector<double>> waypointsthird;
-    GetWaypoints(waypointsthird);
     std::vector<std::vector<double>> waypointsforth;
-    GetWaypoints(waypointsforth);
 
+    GetWaypointsTwo(waypointsfirst, "/home/eonsoo/Map/lane1st.csv");
+    GetWaypointsTwo(waypointssecond, "/home/eonsoo/Map/lane2nd.csv");
+    GetWaypointsTwo(waypointsthird, "/home/eonsoo/Map/lane3rd.csv");
+    GetWaypointsTwo(waypointsforth, "/home/eonsoo/Map/lane4th.csv");
+    
     // utm projection
-    lanelet::Origin origin({REF_LATITUDE, REF_LONGITUDE});
-    auto projector = lanelet::projection::UtmProjector(origin);
-    for (int idx = 0; idx < waypoints.size(); idx++) {
-        lanelet::BasicPoint3d utm_coords = projector.forward(
-            {waypoints[idx][POSITION_X],
-            waypoints[idx][POSITION_Y],
-            0}
-        );
 
-        waypoints[idx][POSITION_X] = utm_coords.x();
-        waypoints[idx][POSITION_Y] = utm_coords.y();
-    }
-    std::cout << "projection complete, waypoint size : " << waypoints.size() << std::endl;
-
+    ProjectorCoords(waypointsfirst);
+    ProjectorCoords(waypointssecond);
+    ProjectorCoords(waypointsthird);
+    ProjectorCoords(waypointsforth);
+ 
 
     // subscribe and publise
     ControlMsgs msgs;
@@ -71,22 +62,22 @@ int main(int argc, char** argv) {
         throttle_pid = longitudinal_pid.calculate(TARGET_VEL_MS, msgs.vehicle_status.velocity);
 
         steer_output = pp_ctr.SetSteer(
-            waypoints[target_wypt_idx][POSITION_X],
-            waypoints[target_wypt_idx][POSITION_Y]
+            waypointsfirst[target_wypt_idx][POSITION_X],
+            waypointsfirst[target_wypt_idx][POSITION_Y]
         );
 
 
         std::cout << 
             "target waypoint index : " << target_wypt_idx << "\n" <<
-            "waypoint x : " << waypoints[target_wypt_idx][POSITION_X] << "\n" <<
-            "waypoint y : " << waypoints[target_wypt_idx][POSITION_Y] << "\n" <<
+            "waypoint x : " << waypointsfirst[target_wypt_idx][POSITION_X] << "\n" <<
+            "waypoint y : " << waypointsfirst[target_wypt_idx][POSITION_Y] << "\n" <<
             "steer : " << steer_output << "\n" << 
             "==================================================\n" <<
         std::endl;
 
         msgs.PubMsg(throttle_pid, steer_output, 0.);
 
-        if (target_wypt_idx == waypoints.size()-1) {
+        if (target_wypt_idx == waypointsfirst.size()-1) {
             return 0;
         }
 

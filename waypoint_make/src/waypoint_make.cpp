@@ -7,7 +7,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
-#include "rviz_tutorial/waypoint_msg.h"
+#include "waypoint_make/waypoint_msg.h"
 
 /******Waypoint txt 파일을 x, y 좌표값으로 바꾸기 위한 클래스******/
 
@@ -34,7 +34,7 @@ public:
     Point point;
     ReadFile();
     vis_pub = n.advertise<visualization_msgs::MarkerArray>( "visualization_marker", 1000 );
-    point_pub = n.advertise<rviz_tutorial::waypoint_msg>("point_msgs", 1000);
+    point_pub = n.advertise<waypoint_make::waypoint_msg>("point_msgs", 1000);
 
    };
   ~MyPoint(){};
@@ -139,7 +139,7 @@ void MyPoint::MakeArray(std::vector<double> vector_input){
 void MyPoint::WayPoint(){
 
   /**********Control node로 보내기 위한 변수***********/
-    rviz_tutorial::waypoint_msg msg;
+    waypoint_make::waypoint_msg msg;
     
    
 

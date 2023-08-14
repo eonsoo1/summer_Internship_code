@@ -3,49 +3,40 @@
 
 #include "pure_pursuit/waypoint_save/waypoint_save.h"
 
+#include "lanelet2_core/LaneletMap.h"
+#include "lanelet2_projection/UTM.h"
 
-void GetWaypoints (std::vector<std::vector<double>>& container) {
+#define REF_LATITUDE    0.
+#define REF_LONGITUDE   0.
 
-    std::string csv_loc = "/home/eonsoo/Map/lane4th.csv";
+
+void GetWaypointsTwo(std::vector<std::vector<double>>& container, std::string location){
+
+    std::string csv_loc = location;//"/home/eonsoo/Map/lane1st.csv";
     std::string start_col = "latitude";
     std::string end_col = "longitude";
 
     CSV2Data(csv_loc, start_col, end_col, container);
 
-    // WaypointRearrange(container);
+    // WaypointRearrange(container); 
 }
 
-void GetWaypointsSecond (std::vector<std::vector<double>>& container) {
+void ProjectorCoords(std::vector<std::vector<double>>& waypoints){
 
-    std::string csv_loc = "/home/eonsoo/Map/lane2nd.csv";
-    std::string start_col = "latitude";
-    std::string end_col = "longitude";
+    lanelet::Origin origin({REF_LATITUDE, REF_LONGITUDE});
+    auto projector = lanelet::projection::UtmProjector(origin);
+    for (int idx = 0; idx < waypoints.size(); idx++) {
+        lanelet::BasicPoint3d utm_coords = projector.forward(
+            {waypoints[idx][POSITION_X],
+            waypoints[idx][POSITION_Y],
+            0}
+        );
 
-    CSV2Data(csv_loc, start_col, end_col, container);
+        waypoints[idx][POSITION_X] = utm_coords.x();
+        waypoints[idx][POSITION_Y] = utm_coords.y();
+    }
+    std::cout << "projection complete, waypoint size : " << waypoints.size() << std::endl;
 
-    // WaypointRearrange(container);
-}
-
-void GetWaypointsThird (std::vector<std::vector<double>>& container) {
-
-    std::string csv_loc = "/home/eonsoo/Map/lane3rd.csv";
-    std::string start_col = "latitude";
-    std::string end_col = "longitude";
-
-    CSV2Data(csv_loc, start_col, end_col, container);
-
-    // WaypointRearrange(container);
-}
-
-void GetWaypointsForth (std::vector<std::vector<double>>& container) {
-
-    std::string csv_loc = "/home/eonsoo/Map/lane4th.csv";
-    std::string start_col = "latitude";
-    std::string end_col = "longitude";
-
-    CSV2Data(csv_loc, start_col, end_col, container);
-
-    // WaypointRearrange(container);
 }
 
 int CSV2Data(std::string csv_location, std::string  reading_col_start_title, std::string reading_col_end_title, std::vector<std::vector<double>> &data_vec) {
