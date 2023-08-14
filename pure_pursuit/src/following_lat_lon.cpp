@@ -30,14 +30,14 @@ int main(int argc, char** argv) {
     ros::Rate loop_rate_hz(60.0);
 
     // bagfile car odometry -> waypoints
-    std::vector<std::vector<double>> waypoints;
-    GetWaypoints(waypoints);
-    std::vector<std::vector<double>> waypoints;
-    GetWaypoints(waypoints);
-    std::vector<std::vector<double>> waypoints;
-    GetWaypoints(waypoints);
-    std::vector<std::vector<double>> waypoints;
-    GetWaypoints(waypoints);
+    std::vector<std::vector<double>> waypointsfirst;
+    GetWaypoints(waypointsfirst);
+    std::vector<std::vector<double>> waypointssecond;
+    GetWaypoints(waypointssecond);
+    std::vector<std::vector<double>> waypointsthird;
+    GetWaypoints(waypointsthird);
+    std::vector<std::vector<double>> waypointsforth;
+    GetWaypoints(waypointsforth);
 
     // utm projection
     lanelet::Origin origin({REF_LATITUDE, REF_LONGITUDE});
