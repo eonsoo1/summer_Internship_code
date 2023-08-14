@@ -8,6 +8,7 @@ add_compile_options(-std=c++17)
 find_package(catkin REQUIRED COMPONENTS
     roscpp
     tf
+    visualization_msgs
 
     lanelet2_core
     lanelet2_projection
@@ -26,12 +27,13 @@ add_message_files( FILES
 generate_messages( DEPENDENCIES
     std_msgs
     geometry_msgs
+    visualization_msgs
 )
 
 catkin_package(
     INCLUDE_DIRS include
     LIBRARIES pure_pursuit
-    CATKIN_DEPENDS roscpp
+    CATKIN_DEPENDS roscpp visualization_msgs
     DEPENDS system_lib
 )
 
@@ -72,6 +74,7 @@ add_executable(following_lat_lon
     include/pure_pursuit/ControlMsgs/ControlMsgs.cpp
     include/pure_pursuit/pid/pid.cpp
     include/pure_pursuit/waypoint_save/get_lat_lon.cpp
+    # include/pure_pursuit/Planning/planning.cpp
 )
 
 add_dependencies(following_lat_lon ${${PROJECT_NAME}_EXPORTED_TARGETS}
