@@ -1,7 +1,7 @@
 #include "/home/eonsoo/catkin_ws/src/planning_node/include/planning_node/plan/planning.h"
 #include "/home/eonsoo/catkin_ws/src/planning_node/include/planning_node/waypoint_save/waypoint_save.h"
 #include "/home/eonsoo/catkin_ws/src/planning_node/include/planning_node/VehicleMsgs/VehicleMsgs.h"
-#include "/home/eonsoo/catkin_ws/src/planning_node/include/planning_node/stanley/stanley.h"
+#include "/home/eonsoo/catkin_ws/src/planning_node/include/planning_node/search/search.h"
 
 #define LOOP_HZ 100
 
@@ -44,10 +44,10 @@ int main(int argc, char** argv) {
     
     Planning plan;
     VehicleMsgs msg4control;
-    StanleyControl targetpoint1;
-    StanleyControl targetpoint2;
-    StanleyControl targetpoint3;
-    StanleyControl targetpoint4;
+    FindPoint targetpoint1;
+    FindPoint targetpoint2;
+    FindPoint targetpoint3;
+    FindPoint targetpoint4;
 
     planning_node::CarlaEgoVehicleStatus car_stat;
     geometry_msgs::PoseStamped front_wheel_pose;
