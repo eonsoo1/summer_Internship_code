@@ -138,6 +138,7 @@ add_executable(planning_node src/planning.cpp
 
   include/planning_node/VehicleMsgs/VehicleMsgs.cpp
   include/planning_node/waypoint_save/get_lat_lon.cpp
+  include/planning_node/stanley/stanley.cpp
 )
 add_dependencies(planning_node ${${PROJECT_NAME}_EXPORTED_TARGETS}
 ${catkin_EXPORTED_TARGETS})

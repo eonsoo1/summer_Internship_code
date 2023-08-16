@@ -9,7 +9,6 @@ VehicleMsgs::VehicleMsgs() {
     front_wheel_sub = nh.subscribe("/front_wheel_pose", 100, &VehicleMsgs::GetFrontWheelPose, this);
     rear_wheel_sub = nh.subscribe("/rear_wheel_pose", 100, &VehicleMsgs::GetRearWheelPose, this);
 
-    control_pub = nh.advertise<planning_node::CarlaEgoVehicleControl>("/carla/ego_vehicle/vehicle_control_cmd", 100);
 
     target_vis_pub = nh.advertise<visualization_msgs::Marker>("/target_waypoint", 100);
     target_wypt_marker.header.frame_id = "map";
@@ -57,7 +56,7 @@ void VehicleMsgs::GetFrontWheelPose(const geometry_msgs::PoseStamped::ConstPtr& 
 void VehicleMsgs::GetRearWheelPose(const geometry_msgs::PoseStamped::ConstPtr& msg) {
     rr_pose.pose = msg->pose;
     rr_pose_received = true;
-}
+}   
 
 void VehicleMsgs::SetValue(planning_node::CarlaEgoVehicleStatus& _car_stat, geometry_msgs::PoseStamped& _fr_pose, geometry_msgs::PoseStamped& _rr_pose) {
     _car_stat = vehicle_status;
@@ -65,14 +64,6 @@ void VehicleMsgs::SetValue(planning_node::CarlaEgoVehicleStatus& _car_stat, geom
     _rr_pose = rr_pose;
 }
 
-
-void VehicleMsgs::PubControlMsg(double throttle, double steer, double brake) {
-    ctrl_pub_msg.throttle = throttle;
-    ctrl_pub_msg.steer = steer;
-    ctrl_pub_msg.brake = brake;
-
-    control_pub.publish(ctrl_pub_msg);
-}
 
 void VehicleMsgs::PubVisMsg(std::vector<double> wypt) {
     target_wypt_marker.header.stamp = ros::Time::now();

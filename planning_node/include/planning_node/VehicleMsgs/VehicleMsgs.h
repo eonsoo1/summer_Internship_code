@@ -30,7 +30,7 @@ class VehicleMsgs {
     bool fr_pose_received;
     bool rr_pose_received;
 
-    ros::Publisher control_pub;
+
     planning_node::CarlaEgoVehicleControl ctrl_pub_msg;
 
     ros::Publisher target_vis_pub;
@@ -46,8 +46,7 @@ public:
     void GetRearWheelPose(const geometry_msgs::PoseStamped::ConstPtr& msg);
 
     void SetValue(planning_node::CarlaEgoVehicleStatus& _car_stat, geometry_msgs::PoseStamped& _fr_pose, geometry_msgs::PoseStamped& _rr_pose);
-
-    void PubControlMsg(double throttle, double steer, double brake);
+    
     void PubVisMsg(std::vector<double> wypt);
 
 

@@ -32,35 +32,34 @@ public:
         point_pub = n.advertise<planning_node::waypoint_msg>("point_msgs", 1000);
     };
     ~Planning(){};
-    void WayPoint(std::vector<std::vector<double>>& waypoints);
+    void WayPoint(int target_idx, int toward_idx);
     
-    std::vector<std::vector<double>> SelectPoint(
-        std::vector<std::vector<double>>  waypointsfirst,
-        std::vector<std::vector<double>>  waypointssecond,
-        std::vector<std::vector<double>>  waypointsthird,
-        std::vector<std::vector<double>>  waypointsforth);
+    // std::vector<std::vector<double>> SelectPoint(
+    //     std::vector<std::vector<double>>  waypointsfirst,
+    //     std::vector<std::vector<double>>  waypointssecond,
+    //     std::vector<std::vector<double>>  waypointsthird,
+    //     std::vector<std::vector<double>>  waypointsforth);
+    int SelectPoint();
+    void TowardPoint();
 
 };
 
-std::vector<std::vector<double>> Planning::SelectPoint(
-    std::vector<std::vector<double>>  waypointsfirst,
-    std::vector<std::vector<double>>  waypointssecond,
-    std::vector<std::vector<double>>  waypointsthird,
-    std::vector<std::vector<double>>  waypointsforth){
+
+int Planning::SelectPoint(){
 
     if(trigger1 == true) {
 
-        return waypointsfirst;
+        return 1;
 
     }
     else if(trigger2 == true) {
 
-        return waypointssecond;
+        return 2;
 
     }
     else if(trigger3 == true) {
 
-        return waypointsthird;
+        return 3;
 
     }
     else if(trigger4 = true){
@@ -72,7 +71,7 @@ std::vector<std::vector<double>> Planning::SelectPoint(
             trigger3 = true;
             trigger4 = false;
         }
-        return waypointsforth;
+        return 4;
 
     }
 
@@ -80,27 +79,44 @@ std::vector<std::vector<double>> Planning::SelectPoint(
 }
 
 
-void Planning::WayPoint(std::vector<std::vector<double>>& waypoints){
-
-
+void Planning::WayPoint(int target_idx, int toward_idx){
+    
   /**********Control node로 보내기 위한 변수***********/
     planning_node::waypoint_msg msg;
     
-  /**********Control node로 보내기 위한 식***********/
-    for (size_t i = 0; i < waypoints.size(); ++i){
-
-      geometry_msgs::Point point;
-      point.x = waypoints[i][POSITION_X];
-      point.y = waypoints[i][POSITION_Y];
-      msg.points.push_back(point);
-      
-    //   std::cout << "x["<< i<<"] : " << point.x << std::endl;
-    //   std::cout << "y : " << point.y << std::endl;
-    }
-    
+    msg.target_index = target_idx;
+    std::cout << "target_index = " << target_idx << std::endl;
+    std::cout <<"toward_index = " << toward_idx << std::endl; 
+    msg.toward_target_index = toward_idx;
     point_pub.publish(msg);
 
 }
+
+
+// void Planning::WayPoint(std::vector<std::vector<double>>& waypoints){
+
+
+//   /**********Control node로 보내기 위한 변수***********/
+//     planning_node::waypoint_msg msg;
+    
+//   /**********Control node로 보내기 위한 식***********/
+//     for (size_t i = 0; i < waypoints.size(); ++i){
+
+//       geometry_msgs::Point point;
+//       point.x = waypoints[i][POSITION_X];
+//       point.y = waypoints[i][POSITION_Y];
+//       msg.points.push_back(point);
+      
+//     //   std::cout << "x["<< i<<"] : " << point.x << std::endl;
+//     //   std::cout << "y : " << point.y << std::endl;
+//     }
+    
+//     point_pub.publish(msg);
+
+// }
+
+
+
 
 // frenet 좌표계로 변환
 
