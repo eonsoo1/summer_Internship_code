@@ -45,6 +45,8 @@ void GetWayToProjection(
 }
 
 
+
+
 int main(int argc, char** argv) {
 
     ros::init (argc, argv, "following_lat_lon");
@@ -57,14 +59,19 @@ int main(int argc, char** argv) {
     std::vector<std::vector<double>> waypointsthird;
     std::vector<std::vector<double>> waypointsforth;
     std::vector<std::vector<double>> waypoints;
-
+    
     GetWayToProjection(
         waypointsfirst,
         waypointssecond, 
         waypointsthird,
         waypointsforth);
 
-
+    FrenetConverter converter(waypointsfirst);
+    std::vector<std::vector<double>> frenet_waypointsfirst = converter.convertToSDFrenet(waypointsfirst);
+    
+    for (const auto& point : frenet_waypointsfirst) {
+        std::cout << "Frenet Point: s = " << point[0] << ", d = " << point[1] << std::endl;
+    }
     // subscribe and publise
     ControlMsgs msgs;
     
