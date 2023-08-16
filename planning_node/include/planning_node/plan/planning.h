@@ -32,7 +32,7 @@ public:
         point_pub = n.advertise<planning_node::waypoint_msg>("point_msgs", 1000);
     };
     ~Planning(){};
-    void WayPoint(int target_idx, int toward_idx);
+    void WayPoint(int toward_idx, std::vector<std::vector<double>> waypoints);
     
     // std::vector<std::vector<double>> SelectPoint(
     //     std::vector<std::vector<double>>  waypointsfirst,
@@ -40,7 +40,6 @@ public:
     //     std::vector<std::vector<double>>  waypointsthird,
     //     std::vector<std::vector<double>>  waypointsforth);
     int SelectPoint();
-    void TowardPoint();
 
 };
 
@@ -79,14 +78,16 @@ int Planning::SelectPoint(){
 }
 
 
-void Planning::WayPoint(int target_idx, int toward_idx){
+void Planning::WayPoint(int toward_idx, std::vector<std::vector<double>> waypoints){
     
   /**********Control node로 보내기 위한 변수***********/
     planning_node::waypoint_msg msg;
-    
-    msg.target_index = target_idx;
-    std::cout << "target_index = " << target_idx << std::endl;
+  
     std::cout <<"toward_index = " << toward_idx << std::endl; 
+    std::cout << "x = " << waypoints[toward_idx][0] << std::endl; 
+    std::cout << "y = " << waypoints[toward_idx][1] << std::endl; 
+    msg.point.x = waypoints[toward_idx][0];
+    msg.point.y = waypoints[toward_idx][1];
     msg.toward_target_index = toward_idx;
     point_pub.publish(msg);
 

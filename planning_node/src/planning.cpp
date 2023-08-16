@@ -71,27 +71,23 @@ int main(int argc, char** argv) {
 
         if(number == 1){
             std::cout << "============Lane 1st==============" << std::endl;
-            plan.WayPoint(
-            targetpoint1.target_idx(),
-            targetpoint1.FindTowardPoint(targetpoint1.target_idx(), rear_wheel_pose));
+            plan.WayPoint(targetpoint1.FindTowardPoint(targetpoint1.target_idx(), rear_wheel_pose),
+                          waypointsfirst);  
         };
         if(number == 2){
             std::cout << "============Lane 2nd==============" << std::endl;
-            plan.WayPoint(
-            targetpoint2.target_idx(),
-            targetpoint2.FindTowardPoint(targetpoint2.target_idx(), rear_wheel_pose));
+            plan.WayPoint(targetpoint2.FindTowardPoint(targetpoint2.target_idx(), rear_wheel_pose),
+                          waypointssecond);  
         };
         if(number == 3){
             std::cout << "============Lane 3rd==============" << std::endl;
-            plan.WayPoint(
-            targetpoint3.target_idx(),
-            targetpoint3.FindTowardPoint(targetpoint3.target_idx(), rear_wheel_pose));
+            plan.WayPoint(targetpoint3.FindTowardPoint(targetpoint3.target_idx(), rear_wheel_pose),
+                          waypointsthird);  
         };
         if(number == 4){
             std::cout << "============Lane 4th==============" << std::endl;
-            plan.WayPoint(
-            targetpoint4.target_idx(),
-            targetpoint4.FindTowardPoint(targetpoint4.target_idx(), rear_wheel_pose));
+            plan.WayPoint(targetpoint4.FindTowardPoint(targetpoint4.target_idx(), rear_wheel_pose),
+                          waypointsforth);  
         };
 
 

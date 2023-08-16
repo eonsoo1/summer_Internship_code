@@ -11,7 +11,9 @@
 #define MAX_STEERING_DEG            34.99999642
 #define MIN_STEERING_DEG            -34.99999642
 #define LOOKAHEAD_DIST              40.
-class StanleyControl {
+
+
+class FindPoint {
 
     std::vector<std::vector<double>> waypoints;
     int target_search_idx;
@@ -29,7 +31,7 @@ class StanleyControl {
 
 public:
 
-    StanleyControl();
+    FindPoint();
     void GetAllWaypoints(std::vector<std::vector<double>> wypts);
 
     // set waypoint, its distance, and its yaw
