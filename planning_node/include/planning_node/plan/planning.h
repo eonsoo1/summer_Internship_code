@@ -12,17 +12,22 @@
 #include <ros/ros.h>
 #include "planning_node/waypoint_msg.h"
 #include "/home/eonsoo/catkin_ws/src/planning_node/include/planning_node/waypoint_save/waypoint_save.h"
+#include "detection_traffic_sign/red.h"
 
 class Planning{
 
 private:
     ros::Publisher point_pub;
+    ros::Subscriber trafficsign_sub;
     ros::NodeHandle n;
+    planning_node::waypoint_msg msg;
+ 
 
     bool trigger1 = false;
     bool trigger2 = false;
     bool trigger3 = false;
     bool trigger4 = true;
+    bool traffic;
 
     int index = 0;
 
@@ -30,46 +35,62 @@ public:
 
     Planning(){
         point_pub = n.advertise<planning_node::waypoint_msg>("point_msgs", 1000);
+        trafficsign_sub = n.subscribe("stop", 1, &Planning::SignCallback, this);
     };
     ~Planning(){};
-    void WayPoint(int toward_idx, std::vector<std::vector<double>> waypoints);
-    
-    // std::vector<std::vector<double>> SelectPoint(
-    //     std::vector<std::vector<double>>  waypointsfirst,
-    //     std::vector<std::vector<double>>  waypointssecond,
-    //     std::vector<std::vector<double>>  waypointsthird,
-    //     std::vector<std::vector<double>>  waypointsforth);
+    void PubInfo(int toward_idx, std::vector<std::vector<double>> waypoints, bool trigger);
+ 
+    void SignCallback(const detection_traffic_sign::red::ConstPtr& msg_sign);
     int SelectPoint();
 
 };
+void Planning::SignCallback(const detection_traffic_sign::red::ConstPtr& msg_sign){
 
+    traffic = msg_sign->red;
+    std::cout<< "traffic_sign : " << traffic << std::endl;
+}
 
 int Planning::SelectPoint(){
 
+    index++;
+    std::cout<<"index : " << index << std::endl;
+    
     if(trigger1 == true) {
 
+        if(index == 400){
+            trigger1 = false;
+            trigger4 = true;
+        }
         return 1;
 
     }
     else if(trigger2 == true) {
 
+        if(index == 300){
+            trigger2 = false;
+            trigger1 = true;
+        }
         return 2;
 
     }
     else if(trigger3 == true) {
+
+        
+        if(index == 200){
+            trigger3 = false;
+            trigger2 = true;
+        }
 
         return 3;
 
     }
     else if(trigger4 = true){
 
-        index++;
-        std::cout<<"index : " << index << std::endl;
-        //
-        if(index == 300){
+        if(index == 100){
             trigger3 = true;
             trigger4 = false;
         }
+
         return 4;
 
     }
@@ -78,23 +99,26 @@ int Planning::SelectPoint(){
 }
 
 
-void Planning::WayPoint(int toward_idx, std::vector<std::vector<double>> waypoints){
+void Planning::PubInfo(int toward_idx, std::vector<std::vector<double>> waypoints, bool trigger){
     
   /**********Control node로 보내기 위한 변수***********/
-    planning_node::waypoint_msg msg;
   
     std::cout <<"toward_index = " << toward_idx << std::endl; 
     std::cout << "x = " << waypoints[toward_idx][0] << std::endl; 
     std::cout << "y = " << waypoints[toward_idx][1] << std::endl; 
+    std::cout << "overtaking :  " << trigger << std::endl; 
     msg.point.x = waypoints[toward_idx][0];
     msg.point.y = waypoints[toward_idx][1];
     msg.toward_target_index = toward_idx;
+    msg.overtake_trigger = trigger;
     point_pub.publish(msg);
 
 }
 
 
-// void Planning::WayPoint(std::vector<std::vector<double>>& waypoints){
+
+
+// void Planning::PubInfo(std::vector<std::vector<double>>& waypoints){
 
 
 //   /**********Control node로 보내기 위한 변수***********/
